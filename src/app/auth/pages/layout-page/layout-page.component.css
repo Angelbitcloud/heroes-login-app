@@ -1,0 +1,20 @@
+/* Contenedor principal que envuelve el contenido */
+.layout-container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center;     /* Centra verticalmente el contenido */
+    min-height: 100vh;       /* Asegura que el contenedor tenga al menos el alto de la ventana */
+    padding: 1rem;           /* Espaciado interno del contenedor */
+    background-color: #f5f5f5; /* Color de fondo general */
+}
+
+/* Contenedor del contenido, puede ser estilizado según sea necesario */
+.content-container {
+    width: 100%;
+    max-width: 600px;       /* Ancho máximo del contenedor de contenido */
+    margin: 0 auto;         /* Centra horizontalmente el contenido */
+    padding: 2rem;          /* Espaciado interno del contenedor de contenido */
+    background-color: #fff; /* Color de fondo para el contenido */
+    border-radius: 8px;     /* Bordes redondeados del contenedor de contenido */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera para dar profundidad */
+}

@@ -1,0 +1,22 @@
+<div class="login-container">
+    <span class="login-title">Login</span>
+  
+    <div class="form-field">
+      <label for="email" class="form-label">Correo</label>
+      <input id="email" [(ngModel)]="email" type="text" class="form-input" placeholder="Correo" />
+    </div>
+  
+    <div class="form-field">
+      <label for="password" class="form-label">Contraseña</label>
+      <input id="password" [(ngModel)]="password" type="password" class="form-input" placeholder="Contraseña" />
+    </div>
+  
+    <button class="login-button" (click)="onLogin()">
+      <span class="login-icon">Ingresar</span>
+    </button>
+  
+    <div class="register-link">
+      <a href="/auth/register">¿No tienes cuenta?</a>
+    </div>
+  </div>
+  

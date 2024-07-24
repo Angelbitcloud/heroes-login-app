@@ -1,0 +1,19 @@
+<!-- src/app/components/header/header.component.html -->
+<header class="header">
+    <nav class="navbar">
+      <div class="navbar-left">
+        <div class="user-info">
+          <img src="assets/no-user.png" alt="User Photo" class="user-photo" />
+          <span class="user-name">{{ userEmail }}</span>
+        </div>
+        <button (click)="goToFavorites()">Favoritos</button>
+      </div>
+      <div class="navbar-center">
+        <input type="text" placeholder="Buscar..." class="search-bar" />
+      </div>
+      <div class="navbar-right">
+        <button (click)="logout()">Cerrar Sesión</button>
+      </div>
+    </nav>
+  </header>
+  
