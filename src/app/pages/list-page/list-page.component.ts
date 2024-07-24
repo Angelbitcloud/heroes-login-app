@@ -1,4 +1,3 @@
-// list-page.component.ts
 import { Component, OnInit } from '@angular/core';
 import { MarvelService } from '../../services/marvel.service';
 import { FavoritesService } from '../../services/favorites.service';
@@ -12,7 +11,7 @@ import { Comic } from '../../interfaces/comic.interface';
 export class ListPageComponent implements OnInit {
   comics: Comic[] = [];
   loadedItems: number = 0;
-  itemsPerLoad: number = 30;
+  itemsPerLoad: number = 5;
   isLoading: boolean = false;
   hasMore: boolean = true;
 
@@ -31,20 +30,12 @@ export class ListPageComponent implements OnInit {
     this.isLoading = true;
     this.marvelService.getComics(this.loadedItems, this.itemsPerLoad).subscribe(
       response => {
-        const newComics: Comic[] = response.data.results.map((comic: any) => ({
-          id: comic.id,
-          title: comic.title,
-          description: comic.description || 'No description available',
-          imageUrl: `${comic.thumbnail.path}.${comic.thumbnail.extension}`,
-          subtitle: comic.issueNumber ? `Issue #${comic.issueNumber}` : 'No issue number'
-        }));
-
-        this.comics = [...this.comics, ...newComics];
+        this.comics = [...this.comics, ...response];
         this.loadedItems += this.itemsPerLoad;
         this.isLoading = false;
 
         // Check if there are more comics available
-        this.hasMore = response.data.results.length === this.itemsPerLoad;
+        this.hasMore = response.length === this.itemsPerLoad;
       },
       error => {
         console.error('Error loading comics', error);

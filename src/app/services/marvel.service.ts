@@ -3,33 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
 import { map } from 'rxjs/operators';
-
-// Interfaces para los datos
-interface ComicDataWrapper {
-  data: ComicDataContainer;
-}
-
-interface ComicDataContainer {
-  results: Comic[];
-}
-
-interface Comic {
-  id: number;
-  title: string;
-  description?: string;
-  thumbnail: Image;
-  dates: ComicDate[];
-}
-
-interface Image {
-  path: string;
-  extension: string;
-}
-
-interface ComicDate {
-  type: string;
-  date: string;
-}
+import { ComicDataWrapper, Comic } from '../interfaces/comic.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -51,20 +25,24 @@ export class MarvelService {
     return `ts=${ts}&apikey=${this.publicKey}&hash=${hash}`;
   }
 
-  getComics(offset: number = 0, limit: number = 30): Observable<any> {
+  getComics(offset: number = 0, limit: number = 30): Observable<Comic[]> {
     const url = `${this.baseUrl}/comics?${this.getAuthParams()}&offset=${offset}&limit=${limit}`;
     return this.http.get<ComicDataWrapper>(url).pipe(
       map(response => this.extractComicData(response))
     );
   }
 
-  private extractComicData(response: ComicDataWrapper) {
+  private extractComicData(response: ComicDataWrapper): Comic[] {
     return response.data.results.map((comic) => ({
       id: comic.id,
       title: comic.title,
       description: comic.description || 'No description available',
-      imageUrl: `${comic.thumbnail.path}.${comic.thumbnail.extension}`,
-      date: comic.dates.length > 0 ? comic.dates[0].date : 'No date available'
+      thumbnail: {
+        path: comic.thumbnail.path,
+        extension: comic.thumbnail.extension
+      },
+      dates: comic.dates.filter(date => date.type === 'onsaleDate' || date.type === 'focDate'),
+      prices: comic.prices
     }));
   }
 }
