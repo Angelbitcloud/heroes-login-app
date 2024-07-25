@@ -23,6 +23,7 @@ export interface Comic {
   thumbnail: Image;
   dates: ComicDate[];
   prices: ComicPrice[];
+  isFavorite?: boolean; // Agregado
 }
 
 export interface Image {

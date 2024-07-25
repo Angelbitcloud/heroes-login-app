@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FavoritesService } from '../../services/favorites.service';
 import { Comic } from '../../interfaces/comic.interface';
 
@@ -8,7 +8,9 @@ import { Comic } from '../../interfaces/comic.interface';
   styleUrls: ['./card.component.css']
 })
 export class CardComponent implements OnInit {
-  @Input() comic!: Comic;  // Usar la interfaz Comic
+  @Input() comic!: Comic;
+  @Output() addToFavorites = new EventEmitter<number>(); // Cambiado a number
+  @Output() removeFromFavorites = new EventEmitter<number>();
   isFavorite: boolean = false;
 
   constructor(private favoritesService: FavoritesService) {}
@@ -18,15 +20,16 @@ export class CardComponent implements OnInit {
   }
 
   checkIfFavorite(): void {
-    const favorites = this.favoritesService.getFavorites();
-    this.isFavorite = favorites.some(favorite => favorite.id === this.comic.id);
+    this.favoritesService.getFavorites().subscribe(favorites => {
+      this.isFavorite = favorites.some(favorite => favorite.id === this.comic.id);
+    });
   }
 
   toggleFavorite(): void {
     if (this.isFavorite) {
-      this.favoritesService.removeFavorite(this.comic.id);
+      this.removeFromFavorites.emit(this.comic.id);
     } else {
-      this.favoritesService.addFavorite(this.comic);
+      this.addToFavorites.emit(this.comic.id);
     }
     this.isFavorite = !this.isFavorite;
   }
@@ -48,6 +51,12 @@ export class CardComponent implements OnInit {
   get printPrice(): number | undefined {
     const price = this.comic.prices.find(p => p.type === 'printPrice');
     return price ? price.price : undefined;
+  }
+
+  get truncatedTitle(): string {
+    return this.comic.title.length > 30 
+      ? `${this.comic.title.substring(0, 27)}...` 
+      : this.comic.title;
   }
 
   formatDate(date: string): string {

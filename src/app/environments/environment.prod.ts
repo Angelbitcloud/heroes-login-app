@@ -1,4 +1,6 @@
+
 export const firebaseConfig = {
+    apiUrl: 'http://localhost:8000/api', // Cambia esta URL por la de tu backend
     apiKey: "AIzaSyBgrxkgOf8c5QAYPfd_6WdvW-FV5alJya0",
     authDomain: "bd-login-c2f77.firebaseapp.com",
     projectId: "bd-login-c2f77",

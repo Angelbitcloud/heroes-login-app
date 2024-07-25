@@ -10,10 +10,10 @@ import { Comic } from '../../interfaces/comic.interface';
 })
 export class ListPageComponent implements OnInit {
   comics: Comic[] = [];
-  loadedItems: number = 0;
-  itemsPerLoad: number = 5;
-  isLoading: boolean = false;
-  hasMore: boolean = true;
+  isLoading: boolean = true;
+  error: string | null = null;
+  offset: number = 0;
+  limit: number = 3;
 
   constructor(
     private marvelService: MarvelService,
@@ -25,36 +25,37 @@ export class ListPageComponent implements OnInit {
   }
 
   loadComics(): void {
-    if (this.isLoading) return;
-
     this.isLoading = true;
-    this.marvelService.getComics(this.loadedItems, this.itemsPerLoad).subscribe(
-      response => {
-        this.comics = [...this.comics, ...response];
-        this.loadedItems += this.itemsPerLoad;
+    this.marvelService.getComics(this.offset, this.limit).subscribe(
+      (comics) => {
+        this.comics = comics;
         this.isLoading = false;
-
-        // Check if there are more comics available
-        this.hasMore = response.length === this.itemsPerLoad;
       },
-      error => {
-        console.error('Error loading comics', error);
+      (error) => {
+        this.error = 'Failed to load comics';
         this.isLoading = false;
       }
     );
   }
 
-  onShowMore(): void {
-    if (this.hasMore) {
-      this.loadComics();
-    }
+  loadMore(): void {
+    this.offset += this.limit;
+    this.loadComics();
   }
 
-  addToFavorites(comic: Comic): void {
-    this.favoritesService.addFavorite(comic);
+  addToFavorites(comicId: number): void {
+    this.favoritesService.addFavorite(comicId).subscribe(() => {
+      this.comics = this.comics.map(comic =>
+        comic.id === comicId ? { ...comic, isFavorite: true } : comic
+      );
+    });
   }
-
+  
   removeFromFavorites(comicId: number): void {
-    this.favoritesService.removeFavorite(comicId);
+    this.favoritesService.removeFavorite(comicId).subscribe(() => {
+      this.comics = this.comics.map(comic =>
+        comic.id === comicId ? { ...comic, isFavorite: false } : comic
+      );
+    });
   }
 }

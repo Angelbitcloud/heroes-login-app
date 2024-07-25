@@ -1,18 +1,24 @@
-<!-- list-page.component.html -->
 <section class="layout">
   <app-header></app-header>
   <div class="main">
     <div class="comics-grid">
-      <app-card 
-        *ngFor="let comic of comics" 
+      <app-card
+        *ngFor="let comic of comics"
         [comic]="comic"
-        (addToFavorites)="addToFavorites(comic)"
-        (removeFromFavorites)="removeFromFavorites(comic.id)">
+        (addToFavorites)="addToFavorites(comic.id)"
+        (removeFromFavorites)="removeFromFavorites(comic.id)"
+      >
       </app-card>
     </div>
-    <div *ngIf="hasMore" class="show-more">
-      <button (click)="onShowMore()" [disabled]="isLoading">Mostrar Más</button>
-      <mat-progress-spinner *ngIf="isLoading" mode="indeterminate"></mat-progress-spinner>
+    <div class="show-more-container">
+      <mat-progress-spinner
+        *ngIf="isLoading"
+        mode="indeterminate"
+        class="progress-spinner"
+      ></mat-progress-spinner>
+      <div class="show-more">
+        <button (click)="loadMore()" [disabled]="isLoading">Mostrar Más</button>
+      </div>
     </div>
   </div>
   <app-footer></app-footer>

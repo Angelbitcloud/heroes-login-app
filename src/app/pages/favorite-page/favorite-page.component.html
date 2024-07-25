@@ -1,1 +1,14 @@
-<p>favorite-page works!</p>
+<section class="layout">
+    <app-header></app-header>
+    <div class="main">
+      <div class="comics-grid">
+        <app-card 
+          *ngFor="let comic of comics" 
+          [comic]="comic"
+          (removeFromFavorites)="removeFromFavorites(comic.id)">
+        </app-card>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </section>
+  

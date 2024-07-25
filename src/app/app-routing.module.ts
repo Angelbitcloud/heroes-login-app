@@ -5,7 +5,6 @@ import { AuthGuard } from '../app/auth/guard/auth.guard';
 import { PublicGuard } from '../app/auth/guard/public.guard';
 import { ListPageComponent } from '../app/pages/list-page/list-page.component';
 
-// Configuración de rutas principales
 const routes: Routes = [
     {
         path: 'auth',
@@ -25,7 +24,7 @@ const routes: Routes = [
     },
     {
         path: '**', 
-        redirectTo: '404' // Redirige a una página 404 para rutas no definidas
+        redirectTo: 'auth/login' // Redirige a login para rutas no definidas
     }
 ];
 

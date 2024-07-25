@@ -1,25 +1,45 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FavoritesService {
-  private storageKey: string = 'favorites';
+  private apiUrl = `${environment.apiUrl}/favorites/`;
 
-  getFavorites(): any[] {
-    const favorites = localStorage.getItem(this.storageKey);
-    return favorites ? JSON.parse(favorites) : [];
+  constructor(private http: HttpClient) {}
+
+  // Obtener la lista de favoritos
+  getFavorites(): Observable<any[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+    });
+    return this.http.get<any[]>(this.apiUrl, { headers });
   }
 
-  addFavorite(item: any): void {
-    const favorites = this.getFavorites();
-    favorites.push(item);
-    localStorage.setItem(this.storageKey, JSON.stringify(favorites));
+  // Agregar un cómic a favoritos
+  addFavorite(comicId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+    });
+    const body = { id: comicId };  // Asegúrate de que 'comic' es la clave correcta
+    console.log('Sending to backend:', body);
+    return this.http.post(this.apiUrl, body, { headers }).pipe(
+      tap(response => console.log('Response from backend:', response))
+    );
   }
+  
 
-  removeFavorite(itemId: number): void {
-    let favorites = this.getFavorites();
-    favorites = favorites.filter(item => item.id !== itemId);
-    localStorage.setItem(this.storageKey, JSON.stringify(favorites));
+  // Eliminar un cómic de favoritos
+  removeFavorite(comicId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+    });
+    return this.http.delete(`${this.apiUrl}${comicId}/`, { headers }).pipe(
+      tap(response => console.log('Response from backend:', response))
+    );
   }
 }
